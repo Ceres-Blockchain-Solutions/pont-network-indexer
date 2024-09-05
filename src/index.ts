@@ -4,6 +4,7 @@ import {BorshCoder, EventParser, Program} from '@coral-xyz/anchor';
 import { PontNetwork } from "./types/pont_network";
 import pontNetworkIdl from './types/pont_network.json';
 import { parseShipInitialized, parseDataAccountInitialized, parseDataFingerprintAdded, parseExternalObserverRequested } from './eventParsers';
+import { MongoClient } from "mongodb";
 
 const connection = new Connection('http://127.0.0.1:8899', 'confirmed');
 
@@ -15,11 +16,54 @@ const programId = new PublicKey('ApvfQGqW8kzLyiG8x8PTrWJS7o2uLxXNjns6bYLh3H1R');
 //     console.log('Account change detected:', accountInfo);
 // });
 
-connection.onLogs('all', (logs) => {
-    parseShipInitialized(logs.logs);
-    parseDataAccountInitialized(logs.logs);
-    parseDataFingerprintAdded(logs.logs);
-    parseExternalObserverRequested(logs.logs);
-});
+// MongoDB connection URI
+const uri = "mongodb://localhost:27017";
+const client = new MongoClient(uri);
 
-console.log('Solana indexer running...');
+async function run() {
+    try {
+        // Connect to MongoDB
+        await client.connect();
+        console.log("Connected to MongoDB");
+
+        const database = client.db('pontNetwork');
+        const shipsCollection = database.collection('ships');
+        const dataAccountsCollection = database.collection('dataAccounts');
+        const dataFingerprintsCollection = database.collection('dataFingerprints');
+        const externalObserverRequestsCollection = database.collection('externalObserverRequests');
+
+        connection.onLogs('all', async (logs) => {
+            const shipEvents = parseShipInitialized(logs.logs);
+            const dataAccountEvents = parseDataAccountInitialized(logs.logs);
+            const dataFingerprintEvents = parseDataFingerprintAdded(logs.logs);
+            const externalObserverRequestEvents = parseExternalObserverRequested(logs.logs);
+
+            for (let event of shipEvents) {
+                await shipsCollection.insertOne(event);
+                console.log('Ship event stored in MongoDB:', event);
+            }
+
+            for (let event of dataAccountEvents) {
+                await dataAccountsCollection.insertOne(event);
+                console.log('Data Account event stored in MongoDB:', event);
+            }
+
+            for (let event of dataFingerprintEvents) {
+                await dataFingerprintsCollection.insertOne(event);
+                console.log('Data Fingerprint event stored in MongoDB:', event);
+            }
+
+            for (let event of externalObserverRequestEvents) {
+                await externalObserverRequestsCollection.insertOne(event);
+                console.log('External Observer Request event stored in MongoDB:', event);
+            }
+        });
+
+        console.log('Solana indexer running...');
+    } finally {
+        // Ensure the client will close when you finish/error
+        // await client.close();
+    }
+}
+
+run().catch(console.dir);

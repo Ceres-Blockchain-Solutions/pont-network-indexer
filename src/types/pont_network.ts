@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/pont_network.json`.
  */
 export type PontNetwork = {
-  "address": "ApvfQGqW8kzLyiG8x8PTrWJS7o2uLxXNjns6bYLh3H1R",
+  "address": "3dnBfuMPHW52smosEsJwsnLGCR56DrphyUG68GqAcVxb",
   "metadata": {
     "name": "pontNetwork",
     "version": "0.1.0",
@@ -168,11 +168,19 @@ export type PontNetwork = {
       ],
       "args": [
         {
-          "name": "data",
+          "name": "ciphertext",
           "type": "bytes"
         },
         {
-          "name": "dataTimestamp",
+          "name": "tag",
+          "type": "bytes"
+        },
+        {
+          "name": "iv",
+          "type": "bytes"
+        },
+        {
+          "name": "ciphertextTimestamp",
           "type": "u64"
         }
       ]
@@ -243,13 +251,25 @@ export type PontNetwork = {
       ],
       "args": [
         {
-          "name": "data",
+          "name": "ciphertexts",
           "type": {
             "vec": "bytes"
           }
         },
         {
-          "name": "dataTimestamps",
+          "name": "tags",
+          "type": {
+            "vec": "bytes"
+          }
+        },
+        {
+          "name": "ivs",
+          "type": {
+            "vec": "bytes"
+          }
+        },
+        {
+          "name": "ciphertextTimestamps",
           "type": {
             "vec": "u64"
           }
@@ -588,12 +608,24 @@ export type PontNetwork = {
             }
           },
           {
-            "name": "data",
+            "name": "ciphertext",
             "type": "bytes"
           },
           {
-            "name": "dataTimestamp",
+            "name": "tag",
+            "type": "bytes"
+          },
+          {
+            "name": "iv",
+            "type": "bytes"
+          },
+          {
+            "name": "ciphertextTimestamp",
             "type": "u64"
+          },
+          {
+            "name": "dataAccount",
+            "type": "pubkey"
           }
         ]
       }

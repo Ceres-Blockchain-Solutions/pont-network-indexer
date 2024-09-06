@@ -1,5 +1,5 @@
 {
-  "address": "ApvfQGqW8kzLyiG8x8PTrWJS7o2uLxXNjns6bYLh3H1R",
+  "address": "3dnBfuMPHW52smosEsJwsnLGCR56DrphyUG68GqAcVxb",
   "metadata": {
     "name": "pont_network",
     "version": "0.1.0",
@@ -162,11 +162,19 @@
       ],
       "args": [
         {
-          "name": "data",
+          "name": "ciphertext",
           "type": "bytes"
         },
         {
-          "name": "data_timestamp",
+          "name": "tag",
+          "type": "bytes"
+        },
+        {
+          "name": "iv",
+          "type": "bytes"
+        },
+        {
+          "name": "ciphertext_timestamp",
           "type": "u64"
         }
       ]
@@ -237,13 +245,25 @@
       ],
       "args": [
         {
-          "name": "data",
+          "name": "ciphertexts",
           "type": {
             "vec": "bytes"
           }
         },
         {
-          "name": "data_timestamps",
+          "name": "tags",
+          "type": {
+            "vec": "bytes"
+          }
+        },
+        {
+          "name": "ivs",
+          "type": {
+            "vec": "bytes"
+          }
+        },
+        {
+          "name": "ciphertext_timestamps",
           "type": {
             "vec": "u64"
           }
@@ -582,12 +602,24 @@
             }
           },
           {
-            "name": "data",
+            "name": "ciphertext",
             "type": "bytes"
           },
           {
-            "name": "data_timestamp",
+            "name": "tag",
+            "type": "bytes"
+          },
+          {
+            "name": "iv",
+            "type": "bytes"
+          },
+          {
+            "name": "ciphertext_timestamp",
             "type": "u64"
+          },
+          {
+            "name": "data_account",
+            "type": "pubkey"
           }
         ]
       }

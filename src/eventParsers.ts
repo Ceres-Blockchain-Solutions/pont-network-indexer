@@ -6,7 +6,7 @@ import pontNetworkIdl from './types/pont_network.json';
 const coder = new BorshCoder(pontNetworkIdl as anchor.Idl);
 
 export function parseShipInitialized(logs: string[]) {
-    const eventParser = new EventParser(new PublicKey('ApvfQGqW8kzLyiG8x8PTrWJS7o2uLxXNjns6bYLh3H1R'), coder);
+    const eventParser = new EventParser(new PublicKey('3dnBfuMPHW52smosEsJwsnLGCR56DrphyUG68GqAcVxb'), coder);
     const events = eventParser.parseLogs(logs);
     const parsedEvents = [];
     for (let event of events) {
@@ -32,10 +32,11 @@ export function parseShipInitialized(logs: string[]) {
 }
 
 export function parseDataAccountInitialized(logs: string[]) {
-    const eventParser = new EventParser(new PublicKey('ApvfQGqW8kzLyiG8x8PTrWJS7o2uLxXNjns6bYLh3H1R'), coder);
+    const eventParser = new EventParser(new PublicKey('3dnBfuMPHW52smosEsJwsnLGCR56DrphyUG68GqAcVxb'), coder);
     const events = eventParser.parseLogs(logs);
     const parsedEvents = [];
     for (let event of events) {
+        console.log('\nEvent: ', event);
         if (event.name === 'DataAccountInitialized') {
             const { ship, data_acc_count, external_observers, external_observers_keys } = event.data;
             console.log('\nDataAccountInitialized event:');
@@ -63,32 +64,35 @@ export function parseDataAccountInitialized(logs: string[]) {
 }
 
 export function parseDataFingerprintAdded(logs: string[]) {
-    const eventParser = new EventParser(new PublicKey('ApvfQGqW8kzLyiG8x8PTrWJS7o2uLxXNjns6bYLh3H1R'), coder);
+    const eventParser = new EventParser(new PublicKey('3dnBfuMPHW52smosEsJwsnLGCR56DrphyUG68GqAcVxb'), coder);
     const events = eventParser.parseLogs(logs);
     const parsedEvents = [];
     for (let event of events) {
         if (event.name === 'DataFingerprintAdded') {
-            const { ship, fingerprint, data } = event.data;
-            const data_timestamp = event.data.data_timestamp.toNumber();
+            const { ship, fingerprint, ciphertext, tag, iv, data_account } = event.data;
+            const ciphertext_timestamp = event.data.ciphertext_timestamp.toNumber();
 
-            const humanReadableDate = new Date(data_timestamp).toLocaleString();
+            const ciphertextTimestampDate = new Date(ciphertext_timestamp);
+            const humanReadableDate = ciphertextTimestampDate.toLocaleString();
             console.log('\nDataFingerprintAdded event:');
             console.log(`\tShip: ${ship.toBase58()}`);
             console.log(`\tFingerprint: ${Buffer.from(fingerprint[0]).toString('hex')}`);
-            console.log(`\tData: ${Buffer.from(data).toString('utf-8')}`);
-            console.log(`\tData Timestamp: ${humanReadableDate} (Unix Time: ${data_timestamp})`);
-
-            const timestamp = new Date();
-            const timestampUnix = timestamp.getTime();
-            const timestampString = timestamp.toLocaleString();
+            console.log(`\tCiphertext: ${Buffer.from(ciphertext).toString('hex')}`);
+            console.log(`\tTag: ${Buffer.from(tag).toString('hex')}`);
+            console.log(`\tIV: ${Buffer.from(iv).toString('hex')}`);
+            console.log(`\tData Account: ${data_account.toBase58()}`);
+            console.log(`\tCiphertext Timestamp: ${humanReadableDate} (Unix Time: ${ciphertext_timestamp})`);
 
             parsedEvents.push({
                 event: 'DataFingerprintAdded',
                 ship: ship.toBase58(),
                 fingerprint: Buffer.from(fingerprint[0]).toString('hex'),
-                data: Buffer.from(data).toString('utf-8'),
-                data_timestamp: humanReadableDate,
-                timestamp
+                ciphertext: Buffer.from(ciphertext).toString('hex'),
+                tag: Buffer.from(tag).toString('hex'),
+                iv: Buffer.from(iv).toString('hex'),
+                data_account: data_account.toBase58(),
+                ciphertext_timestamp_unix: ciphertext_timestamp,
+                ciphertext_timestamp_date: ciphertextTimestampDate,
             });
         }
     }
@@ -96,7 +100,7 @@ export function parseDataFingerprintAdded(logs: string[]) {
 }
 
 export function parseExternalObserverRequested(logs: string[]) {
-    const eventParser = new EventParser(new PublicKey('ApvfQGqW8kzLyiG8x8PTrWJS7o2uLxXNjns6bYLh3H1R'), coder);
+    const eventParser = new EventParser(new PublicKey('3dnBfuMPHW52smosEsJwsnLGCR56DrphyUG68GqAcVxb'), coder);
     const events = eventParser.parseLogs(logs);
     const parsedEvents = [];
     for (let event of events) {

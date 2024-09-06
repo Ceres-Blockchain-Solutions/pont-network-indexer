@@ -8,7 +8,7 @@ import { MongoClient } from "mongodb";
 
 const connection = new Connection('http://127.0.0.1:8899', 'confirmed');
 
-const programId = new PublicKey('ApvfQGqW8kzLyiG8x8PTrWJS7o2uLxXNjns6bYLh3H1R');
+const programId = new PublicKey('3dnBfuMPHW52smosEsJwsnLGCR56DrphyUG68GqAcVxb');
 
 // const eventParser = new EventParser(programId, new BorshCoder(pontNetworkIdl as anchor.Idl));
 
@@ -33,8 +33,8 @@ async function run() {
         const externalObserverRequestsCollection = database.collection('externalObserverRequests');
 
         connection.onLogs('all', async (logs) => {
-            const shipEvents = parseShipInitialized(logs.logs);
             const dataAccountEvents = parseDataAccountInitialized(logs.logs);
+            const shipEvents = parseShipInitialized(logs.logs);
             const dataFingerprintEvents = parseDataFingerprintAdded(logs.logs);
             const externalObserverRequestEvents = parseExternalObserverRequested(logs.logs);
 

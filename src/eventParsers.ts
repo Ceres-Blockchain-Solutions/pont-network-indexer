@@ -6,7 +6,7 @@ import pontNetworkIdl from './types/pont_network.json';
 const coder = new BorshCoder(pontNetworkIdl as anchor.Idl);
 
 export function parseShipInitialized(logs: string[]) {
-    const eventParser = new EventParser(new PublicKey('3dnBfuMPHW52smosEsJwsnLGCR56DrphyUG68GqAcVxb'), coder);
+    const eventParser = new EventParser(new PublicKey('6gdTocGpug1w7cgV1MQXyJDDGPtw7JHM5aNjKB8wY8V6'), coder);
     const events = eventParser.parseLogs(logs);
     const parsedEvents = [];
     for (let event of events) {
@@ -32,16 +32,16 @@ export function parseShipInitialized(logs: string[]) {
 }
 
 export function parseDataAccountInitialized(logs: string[]) {
-    const eventParser = new EventParser(new PublicKey('3dnBfuMPHW52smosEsJwsnLGCR56DrphyUG68GqAcVxb'), coder);
+    const eventParser = new EventParser(new PublicKey('6gdTocGpug1w7cgV1MQXyJDDGPtw7JHM5aNjKB8wY8V6'), coder);
     const events = eventParser.parseLogs(logs);
     const parsedEvents = [];
     for (let event of events) {
         console.log('\nEvent: ', event);
         if (event.name === 'DataAccountInitialized') {
-            const { ship, data_acc_count, external_observers, external_observers_keys } = event.data;
+            const { ship, data_account, external_observers, external_observers_keys } = event.data;
             console.log('\nDataAccountInitialized event:');
             console.log(`\tShip: ${ship.toBase58()}`);
-            console.log(`\tData Account Count: ${data_acc_count}`);
+            console.log(`\tData Account Count: ${data_account.toBase58()}`);
             console.log(`\tExternal Observers: ${external_observers.map((observer: PublicKey) => observer.toBase58()).join(', ')}`);
             console.log(`\tExternal Observers Keys: ${external_observers_keys.map((key: number[]) => Buffer.from(key).toString('hex')).join(' | ')}`);
 
@@ -52,7 +52,7 @@ export function parseDataAccountInitialized(logs: string[]) {
             parsedEvents.push({
                 event: 'DataAccountInitialized',
                 ship: ship.toBase58(),
-                data_acc_count,
+                data_account: data_account.toBase58(),
                 external_observers: external_observers.map((observer: PublicKey) => observer.toBase58()),
                 external_observers_keys: external_observers_keys.map((key: number[]) => Buffer.from(key).toString('hex')),
                 timestamp
@@ -64,7 +64,7 @@ export function parseDataAccountInitialized(logs: string[]) {
 }
 
 export function parseDataFingerprintAdded(logs: string[]) {
-    const eventParser = new EventParser(new PublicKey('3dnBfuMPHW52smosEsJwsnLGCR56DrphyUG68GqAcVxb'), coder);
+    const eventParser = new EventParser(new PublicKey('6gdTocGpug1w7cgV1MQXyJDDGPtw7JHM5aNjKB8wY8V6'), coder);
     const events = eventParser.parseLogs(logs);
     const parsedEvents = [];
     for (let event of events) {
@@ -100,7 +100,7 @@ export function parseDataFingerprintAdded(logs: string[]) {
 }
 
 export function parseExternalObserverRequested(logs: string[]) {
-    const eventParser = new EventParser(new PublicKey('3dnBfuMPHW52smosEsJwsnLGCR56DrphyUG68GqAcVxb'), coder);
+    const eventParser = new EventParser(new PublicKey('6gdTocGpug1w7cgV1MQXyJDDGPtw7JHM5aNjKB8wY8V6'), coder);
     const events = eventParser.parseLogs(logs);
     const parsedEvents = [];
     for (let event of events) {
@@ -119,6 +119,41 @@ export function parseExternalObserverRequested(logs: string[]) {
                 data_account: data_account.toBase58(),
                 external_observer: external_observer.toBase58(),
                 timestamp
+            });
+        }
+    }
+    return parsedEvents;
+}
+
+export function parseExternalObserverAdded(logs: string[]) {
+    const eventParser = new EventParser(new PublicKey('6gdTocGpug1w7cgV1MQXyJDDGPtw7JHM5aNjKB8wY8V6'), coder);
+    const events = eventParser.parseLogs(logs);
+    const parsedEvents = [];
+    for (let event of events) {
+        if (event.name === 'ExternalObserverAdded') {
+            const { data_account, external_observer, external_observers_account, ship_account, ship_management, external_observer_encrypted_master_key } = event.data;
+            console.log('\nExternalObserverAdded event:');
+            console.log(`\tData Account: ${data_account.toBase58()}`);
+            console.log(`\tExternal Observer: ${external_observer.toBase58()}`);
+            console.log(`\tExternal Observers Account: ${external_observers_account.toBase58()}`);
+            console.log(`\tShip Account: ${ship_account.toBase58()}`);
+            console.log(`\tShip Management: ${ship_management.toBase58()}`);
+            console.log(`\tExternal Observer Encrypted Master Key: ${Buffer.from(external_observer_encrypted_master_key).toString('hex')}`);
+
+            const timestamp = new Date();
+            const timestampUnix = timestamp.getTime();
+            const timestampString = timestamp.toLocaleString();
+
+            parsedEvents.push({
+                event: 'ExternalObserverAdded',
+                data_account: data_account.toBase58(),
+                external_observer: external_observer.toBase58(),
+                external_observers_account: external_observers_account.toBase58(),
+                ship_account: ship_account.toBase58(),
+                ship_management: ship_management.toBase58(),
+                external_observer_encrypted_master_key: Buffer.from(external_observer_encrypted_master_key).toString('hex'),
+                timestamp_unix: timestampUnix,
+                timestamp_string: timestampString
             });
         }
     }

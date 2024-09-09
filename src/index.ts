@@ -1,14 +1,15 @@
 import * as anchor from "@coral-xyz/anchor";
 import { Connection, PublicKey } from '@solana/web3.js';
 import {BorshCoder, EventParser, Program} from '@coral-xyz/anchor';
-import { PontNetwork } from "./types/pont_network";
+// import { PontNetwork } from "./types/pont_network";
 import pontNetworkIdl from './types/pont_network.json';
-import { parseShipInitialized, parseDataAccountInitialized, parseDataFingerprintAdded, parseExternalObserverRequested } from './eventParsers';
-import { MongoClient } from "mongodb";
+import { parseShipInitialized, parseDataAccountInitialized, parseDataFingerprintAdded, parseExternalObserverRequested, parseExternalObserverAdded } from './eventParsers';
+import { Collection, MongoClient } from "mongodb";
+import { DataAccountDocument } from "./schemas/dataAccount";
 
 const connection = new Connection('http://127.0.0.1:8899', 'confirmed');
 
-const programId = new PublicKey('3dnBfuMPHW52smosEsJwsnLGCR56DrphyUG68GqAcVxb');
+const programId = new PublicKey('6gdTocGpug1w7cgV1MQXyJDDGPtw7JHM5aNjKB8wY8V6');
 
 // const eventParser = new EventParser(programId, new BorshCoder(pontNetworkIdl as anchor.Idl));
 
@@ -28,15 +29,17 @@ async function run() {
 
         const database = client.db('pontNetwork');
         const shipsCollection = database.collection('ships');
-        const dataAccountsCollection = database.collection('dataAccounts');
+        const dataAccountsCollection: Collection<DataAccountDocument> = database.collection('dataAccounts');
         const dataFingerprintsCollection = database.collection('dataFingerprints');
         const externalObserverRequestsCollection = database.collection('externalObserverRequests');
+        const externalObserverAddedEventsCollection = database.collection('externalObserverAddedEvents');
 
         connection.onLogs('all', async (logs) => {
             const dataAccountEvents = parseDataAccountInitialized(logs.logs);
             const shipEvents = parseShipInitialized(logs.logs);
             const dataFingerprintEvents = parseDataFingerprintAdded(logs.logs);
             const externalObserverRequestEvents = parseExternalObserverRequested(logs.logs);
+            const externalObserverAddedEvents = parseExternalObserverAdded(logs.logs);
 
             for (let event of shipEvents) {
                 await shipsCollection.insertOne(event);
@@ -57,6 +60,24 @@ async function run() {
                 await externalObserverRequestsCollection.insertOne(event);
                 console.log('External Observer Request event stored in MongoDB:', event);
             }
+
+            for (let event of externalObserverAddedEvents) {
+                await externalObserverAddedEventsCollection.insertOne(event);
+                console.log('External Observer Added event stored in MongoDB:', event);
+
+                await dataAccountsCollection.updateOne(
+                    { data_account: event.data_account },
+                    {
+                        $push: {
+                            external_observers: event.external_observer,
+                            external_observers_keys: event.external_observer_encrypted_master_key
+                        }
+                    },
+                    { upsert: true }
+                );
+
+            }
+            
         });
 
         console.log('Solana indexer running...');

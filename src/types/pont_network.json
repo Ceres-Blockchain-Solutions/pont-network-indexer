@@ -1,5 +1,5 @@
 {
-  "address": "3dnBfuMPHW52smosEsJwsnLGCR56DrphyUG68GqAcVxb",
+  "address": "6gdTocGpug1w7cgV1MQXyJDDGPtw7JHM5aNjKB8wY8V6",
   "metadata": {
     "name": "pont_network",
     "version": "0.1.0",
@@ -127,9 +127,15 @@
             "vec": {
               "array": [
                 "u8",
-                32
+                128
               ]
             }
+          }
+        },
+        {
+          "name": "external_observers_x25519_pks",
+          "type": {
+            "vec": "pubkey"
           }
         }
       ]
@@ -204,16 +210,30 @@
         },
         {
           "name": "ship_management",
+          "writable": true,
           "signer": true,
           "relations": [
             "ship_account"
           ]
+        },
+        {
+          "name": "system_program",
+          "address": "11111111111111111111111111111111"
         }
       ],
       "args": [
         {
           "name": "external_observer_to_be_approved",
           "type": "pubkey"
+        },
+        {
+          "name": "external_observer_encrypted_master_key",
+          "type": {
+            "array": [
+              "u8",
+              128
+            ]
+          }
         }
       ]
     },
@@ -339,7 +359,12 @@
           "address": "11111111111111111111111111111111"
         }
       ],
-      "args": []
+      "args": [
+        {
+          "name": "external_observer_x25519_pk",
+          "type": "pubkey"
+        }
+      ]
     },
     {
       "name": "initialize_ship",
@@ -502,6 +527,19 @@
       ]
     },
     {
+      "name": "ExternalObserverAdded",
+      "discriminator": [
+        62,
+        35,
+        223,
+        229,
+        51,
+        255,
+        154,
+        103
+      ]
+    },
+    {
       "name": "ExternalObserverRequested",
       "discriminator": [
         58,
@@ -561,8 +599,8 @@
             "type": "pubkey"
           },
           {
-            "name": "data_acc_count",
-            "type": "u32"
+            "name": "data_account",
+            "type": "pubkey"
           },
           {
             "name": "external_observers",
@@ -576,7 +614,7 @@
               "vec": {
                 "array": [
                   "u8",
-                  32
+                  128
                 ]
               }
             }
@@ -625,6 +663,43 @@
       }
     },
     {
+      "name": "ExternalObserverAdded",
+      "type": {
+        "kind": "struct",
+        "fields": [
+          {
+            "name": "data_account",
+            "type": "pubkey"
+          },
+          {
+            "name": "external_observer",
+            "type": "pubkey"
+          },
+          {
+            "name": "external_observers_account",
+            "type": "pubkey"
+          },
+          {
+            "name": "ship_account",
+            "type": "pubkey"
+          },
+          {
+            "name": "ship_management",
+            "type": "pubkey"
+          },
+          {
+            "name": "external_observer_encrypted_master_key",
+            "type": {
+              "array": [
+                "u8",
+                128
+              ]
+            }
+          }
+        ]
+      }
+    },
+    {
       "name": "ExternalObserverRequested",
       "type": {
         "kind": "struct",
@@ -658,12 +733,18 @@
             }
           },
           {
-            "name": "external_observers_keys",
+            "name": "external_observers_x25519_pks",
+            "type": {
+              "vec": "pubkey"
+            }
+          },
+          {
+            "name": "external_observers_master_keys",
             "type": {
               "vec": {
                 "array": [
                   "u8",
-                  32
+                  128
                 ]
               }
             }

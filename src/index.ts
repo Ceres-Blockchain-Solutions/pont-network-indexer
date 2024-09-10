@@ -50,10 +50,13 @@ async function run() {
                 await dataAccountsCollection.insertOne(event);
                 console.log('Data Account event stored in MongoDB:', event);
             }
-
+            
             for (let event of dataFingerprintEvents) {
-                await dataFingerprintsCollection.insertOne(event);
-                console.log('Data Fingerprint event stored in MongoDB:', event);
+                const exists = await dataFingerprintsCollection.findOne({ fingerprint: event.fingerprint });
+                if (!exists) {
+                    await dataFingerprintsCollection.insertOne(event);
+                    console.log('Data Fingerprint event stored in MongoDB:', event);
+                }
             }
 
             for (let event of externalObserverRequestEvents) {

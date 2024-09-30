@@ -1,5 +1,5 @@
 {
-  "address": "6gdTocGpug1w7cgV1MQXyJDDGPtw7JHM5aNjKB8wY8V6",
+  "address": "3dnBfuMPHW52smosEsJwsnLGCR56DrphyUG68GqAcVxb",
   "metadata": {
     "name": "pont_network",
     "version": "0.1.0",
@@ -566,6 +566,12 @@
       ]
     }
   ],
+  "errors": [
+    {
+      "code": 6000,
+      "name": "ExternalObserverAlreadyRequested"
+    }
+  ],
   "types": [
     {
       "name": "DataAccount",
@@ -722,6 +728,12 @@
         "fields": [
           {
             "name": "unapproved_external_observers",
+            "type": {
+              "vec": "pubkey"
+            }
+          },
+          {
+            "name": "unapproved_external_observers_x25519_pks",
             "type": {
               "vec": "pubkey"
             }

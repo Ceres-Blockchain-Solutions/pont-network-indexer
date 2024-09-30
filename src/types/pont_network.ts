@@ -5,7 +5,7 @@
  * IDL can be found at `target/idl/pont_network.json`.
  */
 export type PontNetwork = {
-  "address": "6gdTocGpug1w7cgV1MQXyJDDGPtw7JHM5aNjKB8wY8V6",
+  "address": "3dnBfuMPHW52smosEsJwsnLGCR56DrphyUG68GqAcVxb",
   "metadata": {
     "name": "pontNetwork",
     "version": "0.1.0",

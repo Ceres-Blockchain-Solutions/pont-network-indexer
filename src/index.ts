@@ -9,7 +9,7 @@ import { DataAccountDocument } from "./schemas/dataAccount";
 
 const connection = new Connection('http://127.0.0.1:8899', 'confirmed');
 
-const programId = new PublicKey('6gdTocGpug1w7cgV1MQXyJDDGPtw7JHM5aNjKB8wY8V6');
+const programId = new PublicKey('3dnBfuMPHW52smosEsJwsnLGCR56DrphyUG68GqAcVxb');
 
 // const eventParser = new EventParser(programId, new BorshCoder(pontNetworkIdl as anchor.Idl));
 

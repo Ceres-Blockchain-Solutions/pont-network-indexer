@@ -6,7 +6,7 @@ import pontNetworkIdl from './types/pont_network.json';
 const coder = new BorshCoder(pontNetworkIdl as anchor.Idl);
 
 export function parseShipInitialized(logs: string[]) {
-    const eventParser = new EventParser(new PublicKey('6gdTocGpug1w7cgV1MQXyJDDGPtw7JHM5aNjKB8wY8V6'), coder);
+    const eventParser = new EventParser(new PublicKey('3dnBfuMPHW52smosEsJwsnLGCR56DrphyUG68GqAcVxb'), coder);
     const events = eventParser.parseLogs(logs);
     const parsedEvents = [];
     for (let event of events) {
@@ -32,7 +32,7 @@ export function parseShipInitialized(logs: string[]) {
 }
 
 export function parseDataAccountInitialized(logs: string[]) {
-    const eventParser = new EventParser(new PublicKey('6gdTocGpug1w7cgV1MQXyJDDGPtw7JHM5aNjKB8wY8V6'), coder);
+    const eventParser = new EventParser(new PublicKey('3dnBfuMPHW52smosEsJwsnLGCR56DrphyUG68GqAcVxb'), coder);
     const events = eventParser.parseLogs(logs);
     const parsedEvents = [];
     for (let event of events) {
@@ -64,7 +64,7 @@ export function parseDataAccountInitialized(logs: string[]) {
 }
 
 export function parseDataFingerprintAdded(logs: string[]) {
-    const eventParser = new EventParser(new PublicKey('6gdTocGpug1w7cgV1MQXyJDDGPtw7JHM5aNjKB8wY8V6'), coder);
+    const eventParser = new EventParser(new PublicKey('3dnBfuMPHW52smosEsJwsnLGCR56DrphyUG68GqAcVxb'), coder);
     const events = eventParser.parseLogs(logs);
     const parsedEvents = [];
     for (let event of events) {
@@ -100,7 +100,7 @@ export function parseDataFingerprintAdded(logs: string[]) {
 }
 
 export function parseExternalObserverRequested(logs: string[]) {
-    const eventParser = new EventParser(new PublicKey('6gdTocGpug1w7cgV1MQXyJDDGPtw7JHM5aNjKB8wY8V6'), coder);
+    const eventParser = new EventParser(new PublicKey('3dnBfuMPHW52smosEsJwsnLGCR56DrphyUG68GqAcVxb'), coder);
     const events = eventParser.parseLogs(logs);
     const parsedEvents = [];
     for (let event of events) {
@@ -126,7 +126,7 @@ export function parseExternalObserverRequested(logs: string[]) {
 }
 
 export function parseExternalObserverAdded(logs: string[]) {
-    const eventParser = new EventParser(new PublicKey('6gdTocGpug1w7cgV1MQXyJDDGPtw7JHM5aNjKB8wY8V6'), coder);
+    const eventParser = new EventParser(new PublicKey('3dnBfuMPHW52smosEsJwsnLGCR56DrphyUG68GqAcVxb'), coder);
     const events = eventParser.parseLogs(logs);
     const parsedEvents = [];
     for (let event of events) {
